@@ -1,0 +1,571 @@
+{
+	"info": {
+		"_postman_id": "556e8966-a759-4f68-a607-69f4042ddbaa",
+		"name": "TW_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29218515",
+		"_collection_link": "https://martian-zodiac-156970.postman.co/workspace/Ajij-Khan-Workspace~e857bd78-fc55-43a6-8382-87b041bd7fae/collection/29218515-556e8966-a759-4f68-a607-69f4042ddbaa?action=share&source=collection_link&creator=29218515"
+	},
+	"item": [
+		{
+			"name": "Get Student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let statusCode = pm.response.code;\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"if (statusCode == 200) {\r",
+							"\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"\r",
+							"    console.log(\"Lengh of the response\", jsonData.length);\r",
+							"}\r",
+							"else if (statusCode == 400) {\r",
+							"    pm.test(\"Bad Request/Syntax Error in client request\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 401) {\r",
+							"    pm.test(\"Unauthorized/Authentication Error\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 404) {\r",
+							"    pm.test(\"404 NOF FOUND\", function () {\r",
+							"        pm.response.to.have.status(404)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"\r",
+							"else if (statusCode == 500) {\r",
+							"    pm.test(\"Internal Server Error\", function () {\r",
+							"        pm.response.to.have.status(500)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else {\r",
+							"    pm.test(\"Something is wrong...\");\r",
+							"    console.log(statusCode);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_URL}}/api/studentsDetails",
+					"host": [
+						"{{base_URL}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Student",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const firstName = pm.variables.replaceIn(\"{{$randomFirstName}}\");\r",
+							"const middleName = pm.variables.replaceIn(\"{{$randomFirstName}}\");\r",
+							"const lastName = pm.variables.replaceIn(\"{{$randomLastName}}\");\r",
+							"\r",
+							"const moment = require('moment');\r",
+							"const today  = moment();\r",
+							"const DOB = today.add(\"Y\", -15).format(\"YYYY-MM-DD\")\r",
+							"\r",
+							"pm.environment.set(\"firstName\", firstName);\r",
+							"pm.environment.set(\"middleName\", middleName);\r",
+							"pm.environment.set(\"lastName\", lastName);\r",
+							"pm.environment.set(\"DOB\", DOB);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"pm.environment.set(\"stdID\", jsonData.id);\r",
+							"\r",
+							"let statusCode = pm.response.code;\r",
+							"\r",
+							"if (statusCode == 201) {\r",
+							"    pm.test(\"Status code is 201\", function () {\r",
+							"        pm.response.to.have.status(201);\r",
+							"    })\r",
+							"}\r",
+							"else if (statusCode == 400) {\r",
+							"    pm.test(\"Bad Request/Syntax Error in client request\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 401) {\r",
+							"    pm.test(\"Unauthorized/Authentication Error\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 404) {\r",
+							"    pm.test(\"404 NOF FOUND\", function () {\r",
+							"        pm.response.to.have.status(404)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"\r",
+							"else if (statusCode == 500) {\r",
+							"    pm.test(\"Internal Server Error\", function () {\r",
+							"        pm.response.to.have.status(500)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else {\r",
+							"    pm.test(\"Something is wrong...\");\r",
+							"    console.log(statusCode);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\"first_name\": \"{{firstName}}\", \r\n\"middle_name\": \"{{middleName}}\", \r\n\"last_name\": \"{{lastName}}\", \r\n\"date_of_birth\": \"{{DOB}}\" \r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_URL}}/api/studentsDetails",
+					"host": [
+						"{{base_URL}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let statusCode = pm.response.code;\r",
+							"\r",
+							"if (statusCode == 200) {\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that Id is matched with stored data\", function () {\r",
+							"        pm.expect(jsonData.id).to.eql(pm.environment.get(\"{{id}}\"));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that first name is matched with stored data\", function () {\r",
+							"        pm.expect(jsonData.first_name).to.eql(pm.environment.get(\"{{firstName}}\"));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that middle name is matched with stored data\", function () {\r",
+							"        pm.expect(jsonData.middle_name).to.eql(pm.environment.get(\"{{middleName}}\"));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that last name is matched with stored data\", function () {\r",
+							"        pm.expect(jsonData.last_name).to.eql(pm.environment.get(\"{{lastName}}\"));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that last name is matched with stored data\", function () {\r",
+							"        pm.expect(jsonData.date_of_birth).to.eql(pm.environment.get(\"{{DOB}}\"));\r",
+							"    })\r",
+							"\r",
+							"}\r",
+							"else if (statusCode == 400) {\r",
+							"    pm.test(\"Bad Request/Syntax Error in client request\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 401) {\r",
+							"    pm.test(\"Unauthorized/Authentication Error\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 404) {\r",
+							"    pm.test(\"404 NOF FOUND\", function () {\r",
+							"        pm.response.to.have.status(404)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"\r",
+							"else if (statusCode == 500) {\r",
+							"    pm.test(\"Internal Server Error\", function () {\r",
+							"        pm.response.to.have.status(500)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else {\r",
+							"    pm.test(\"Something is wrong...\");\r",
+							"    console.log(statusCode);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_URL}}/api/studentsDetails/{{stdID}}",
+					"host": [
+						"{{base_URL}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails",
+						"{{stdID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Technical Skills",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let language = [], i;\r",
+							"\r",
+							"for(i = 0; i < 2 ; i++){\r",
+							"    language[i] = pm.variables.replaceIn(\"{{$randomLoremWord}}\");\r",
+							"}\r",
+							"\r",
+							"const expYear = pm.variables.replaceIn(\"{{$randomInt}}\");\r",
+							"\r",
+							"const moment = require('moment');\r",
+							"const today = moment();\r",
+							"\r",
+							"pm.environment.set(\"language\", JSON.stringify(language));\r",
+							"pm.environment.set(\"expYear\", expYear);\r",
+							"pm.environment.set(\"lastUsed\", today.format(\"YYYY-MM-DD\"));\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let statusCode = pm.response.code;\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"if (statusCode == 200) {\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    })\r",
+							"}\r",
+							"else if (statusCode == 400) {\r",
+							"    pm.test(\"Bad Request/Syntax Error in client request\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 401) {\r",
+							"    pm.test(\"Unauthorized/Authentication Error\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 404) {\r",
+							"    pm.test(\"404 NOF FOUND\", function () {\r",
+							"        pm.response.to.have.status(404)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"\r",
+							"else if (statusCode == 500) {\r",
+							"    pm.test(\"Internal Server Error\", function () {\r",
+							"        pm.response.to.have.status(500)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else {\r",
+							"    pm.test(\"Something is wrong...\");\r",
+							"    console.log(statusCode);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\"id\": 1, \r\n\"language\": {{language}}, \r\n\"yearexp\": \"{{expYear}}\", \r\n\"lastused\": \"{{lastUsed}}\", \r\n\"st_id\": {{stdID}} \r\n} \r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_URL}}/api/technicalskills",
+					"host": [
+						"{{base_URL}}"
+					],
+					"path": [
+						"api",
+						"technicalskills"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Student Address",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let houseNumber = pm.variables.replaceIn(\"{{$randomInt}}\");\r",
+							"let city = pm.variables.replaceIn(\"{{$randomCity}}\");\r",
+							"let country = pm.variables.replaceIn(\"{{$randomCountry}}\");\r",
+							"let mobile1 = pm.variables.replaceIn(\"{{$randomPhoneNumber}}\");\r",
+							"let mobile2 = pm.variables.replaceIn(\"{{$randomPhoneNumber}}\");\r",
+							"\r",
+							"pm.environment.set(\"houseNumber\", houseNumber);\r",
+							"pm.environment.set(\"city\", city);\r",
+							"pm.environment.set(\"country\", country);\r",
+							"pm.environment.set(\"mobile1\", mobile1);\r",
+							"pm.environment.set(\"mobile2\", mobile2);\r",
+							"\r",
+							"console.log(houseNumber, pm.environment.get(\"houseNumber\"))\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let statusCode = pm.response.code;\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"if (statusCode == 200) {\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that status is matched\", function () {\r",
+							"        pm.expect(jsonData.status).to.eql(\"true\");\r",
+							"    })\r",
+							"    pm.test(\"Verify that message is matched\", function () {\r",
+							"        pm.expect(jsonData.msg).to.eql(\"Add  data success\");\r",
+							"    })\r",
+							"\r",
+							"}\r",
+							"else if (statusCode == 400) {\r",
+							"    pm.test(\"Bad Request/Syntax Error in client request\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 401) {\r",
+							"    pm.test(\"Unauthorized/Authentication Error\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 404) {\r",
+							"    pm.test(\"404 NOF FOUND\", function () {\r",
+							"        pm.response.to.have.status(404)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"\r",
+							"else if (statusCode == 500) {\r",
+							"    pm.test(\"Internal Server Error\", function () {\r",
+							"        pm.response.to.have.status(500)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else {\r",
+							"    pm.test(\"Something is wrong...\");\r",
+							"    console.log(statusCode);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\"Permanent_Address\": { \r\n\"House_Number\": {{houseNumber}},\r\n\"City\": \"{{city}}\",\r\n \"State\": \"random\", \r\n\"Country\": \"{{country}}\",\r\n\"PhoneNumber\": [ \r\n{ \r\n\"Std_Code\": \"sample string 1\",\r\n\"Home\": \"sample string 2\",\r\n \"Mobile\": \"{{mobile1}}\" \r\n},\r\n{ \r\n\"Std_Code\": \"sample string 1\",\r\n\"Home\": \"sample string 2\", \r\n\"Mobile\": \"{{mobile2}}\" \r\n} \r\n] \r\n},\r\n\"stId\": {{stdID}} \r\n} \r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_URL}}/api/addresses",
+					"host": [
+						"{{base_URL}}"
+					],
+					"path": [
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FINAL STUDENT DETAILS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let statusCode = pm.response.code;\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"if (statusCode == 200) {\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that language is matched\", function () {\r",
+							"        pm.expect((jsonData.data.TechnicalDetails[0].language)).to.eql(JSON.parse(pm.environment.get(\"language\")));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that house number is matched\", function () {\r",
+							"        pm.expect(jsonData.data.Address[0].Permanent_Address.House_Number).to.eql(pm.environment.get(\"houseNumber\"));\r",
+							"    })\r",
+							"\r",
+							"\r",
+							"    pm.test(\"Verify that years of expereience is matched\", function () {\r",
+							"        pm.expect(jsonData.data.TechnicalDetails[0].yearexp).to.eql(pm.environment.get(\"expYear\"));\r",
+							"    })\r",
+							"    pm.test(\"Verify that City is matched\", function () {\r",
+							"        pm.expect(jsonData.data.Address[0].Permanent_Address.City).to.eql(pm.environment.get(\"city\"));\r",
+							"    })\r",
+							"    pm.test(\"Verify that country is matched\", function () {\r",
+							"        pm.expect(jsonData.data.Address[0].Permanent_Address.Country).to.eql(pm.environment.get(\"country\"));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that mobile is matched\", function () {\r",
+							"        pm.expect(jsonData.data.Address[0].Permanent_Address.Country).to.eql(pm.environment.get(\"country\"));\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that current address is matched\", function () {\r",
+							"        pm.expect(String(jsonData.data.Address[0].Current_Address)).to.eql(\"null\");\r",
+							"    })\r",
+							"\r",
+							"    pm.test(\"Verify that mobile1 is matched\", function () {\r",
+							"        pm.expect(jsonData.data.Address[0].Permanent_Address.PhoneNumber[0].Mobile).to.eql(pm.environment.get(\"mobile1\"));\r",
+							"    })\r",
+							"    pm.test(\"Verify that mobile2 is matched\", function () {\r",
+							"        pm.expect(jsonData.data.Address[0].Permanent_Address.PhoneNumber[1].Mobile).to.eql(pm.environment.get(\"mobile2\"));\r",
+							"    })\r",
+							"\r",
+							"}\r",
+							"else if (statusCode == 400) {\r",
+							"    pm.test(\"Bad Request/Syntax Error in client request\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 401) {\r",
+							"    pm.test(\"Unauthorized/Authentication Error\", function () {\r",
+							"        pm.response.to.have.status(401)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else if (statusCode == 404) {\r",
+							"    pm.test(\"404 NOF FOUND\", function () {\r",
+							"        pm.response.to.have.status(404)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"\r",
+							"else if (statusCode == 500) {\r",
+							"    pm.test(\"Internal Server Error\", function () {\r",
+							"        pm.response.to.have.status(500)\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"else {\r",
+							"    pm.test(\"Something is wrong...\");\r",
+							"    console.log(statusCode);\r",
+							"}\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_URL}}/api/FinalStudentDetails/{{stdID}}",
+					"host": [
+						"{{base_URL}}"
+					],
+					"path": [
+						"api",
+						"FinalStudentDetails",
+						"{{stdID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
